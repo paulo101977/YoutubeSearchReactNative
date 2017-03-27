@@ -9,45 +9,82 @@ import {
   AppRegistry,
   StyleSheet,
   Text,
-  View
+  View,
+  TextInput,
+  Navigator, /* Test for navigator, over the Navigation */
 } from 'react-native';
 
-export default class YoutubeSearch extends Component {
+import {Button,Icon,Container} from 'native-base';
+
+//import the navigation component
+import {
+  StackNavigator,
+} from 'react-navigation';
+
+//import main component root
+import YoutubeSearchHome from './components/main';
+
+import styles from './styles/main';
+
+//other router component
+/* const App = StackNavigator({
+  Main: {screen: YoutubeSearchHome}
+}); */
+
+export default class App extends Component {
   render() {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit index.android.js
-        </Text>
-        <Text style={styles.instructions}>
-          Double tap R on your keyboard to reload,{'\n'}
-          Shake or press menu button for dev menu
-        </Text>
-      </View>
-    );
+      const routes = [
+        {title: 'First Scene', index: 0},
+        {title: 'Second Scene', index: 1},
+      ];
+
+      //set the navigation bar
+
+      return (
+        <Navigator
+          initialRoute={routes[0]}
+          initialRouteStack={routes}
+          renderScene={(route, navigator) =>
+            <YoutubeSearchHome></YoutubeSearchHome>
+          }
+          navigationBar={
+             <Navigator.NavigationBar
+               routeMapper={{
+                 LeftButton: (route, navigator, index, navState) =>
+                  { return (
+                      <View style={styles.containerElementsSearch}>
+                        <TextInput style={styles.searchInput}/>
+                      </View>
+                    )
+                  },
+                 RightButton: (route, navigator, index, navState) =>
+                   { return (
+                     <View style={styles.containerElementsButton}>
+                       {/* Use native-base component button */}
+                       <View style={styles.searchButton}  danger iconLeft>
+                         <Text style={styles.searchButtonText}>GO</Text>
+                         {/*<Icon style={styles.searchButtonText} color="white" name="search" />*/}
+                       </View>
+                       {
+                         /*<View style={styles.containerElementsButton}>
+                         <View style={styles.searchButton}>
+                           <Text style={styles.searchButtonText}>GO</Text>
+                         </View>
+                       </View>*/
+                      }
+                    </View>
+                   ); },
+                 Title: (route, navigator, index, navState) =>
+                   { return null; },
+               }}
+               style={styles.searchContainer}
+             />
+          }
+          style={{padding: 1}}
+        />
+      );
+    }
   }
-}
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});
-
-AppRegistry.registerComponent('YoutubeSearch', () => YoutubeSearch);
+//register the main componet
+AppRegistry.registerComponent('YoutubeSearch', () => App);
