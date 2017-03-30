@@ -81,11 +81,13 @@ export default class App extends Component {
             <View style={{flex:1}}>
               {
                 !this.state.loading ?
-                  <YoutubeSearchHome/>
+                  <YoutubeSearchHome>
+                    <Tooltip text={"Fill the video name..."}></Tooltip>
+                  </YoutubeSearchHome>
                   :
                   <LoadingScreen/>
               }
-              <Tooltip text={"Fill the video name..."}></Tooltip>
+
             </View>
           }
           navigationBar={
