@@ -4,8 +4,9 @@ import {
   Dimensions
 } from 'react-native'
 
-//get the width Dimensions
+//get the Dimensions
 var width = Dimensions.get('window').width; //full width
+var height = Dimensions.get('window').height; //full height;
 
 const styles =   StyleSheet.flatten({
   input: {
@@ -13,6 +14,24 @@ const styles =   StyleSheet.flatten({
     height: 40,
     borderColor: 'gray',
     borderWidth: 1
+  },
+  tooltip: {
+    height: 30,
+    flex: 1,
+    marginVertical: 2,
+    marginHorizontal: 2,
+    borderLeftWidth: 3,
+    borderTopWidth: 0,
+    borderRightWidth: 0,
+    borderBottomWidth: 0,
+    borderRadius: 5,
+    borderLeftColor: '#c7c7cc',
+    padding: 2,
+    fontSize: 14,
+    backgroundColor: 'white',
+    position: "absolute",
+    top: 60,
+    left: 20
   },
   searchContainer: {
     flex: 1,
@@ -42,8 +61,6 @@ const styles =   StyleSheet.flatten({
     fontWeight: 'bold'
   },
   searchButton: {
-    width: 40,
-    height: 40,
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
@@ -56,10 +73,23 @@ const styles =   StyleSheet.flatten({
     color: 'white',
     fontFamily: 'Times',
   },
+  listContainer:{
+    marginTop: 60,
+    //height: height - 60, //max height of screen minus 60
+  },
+  listItemContainer:{
+    height: 100,
+    //borderBottomWidth: 1,
+    //borderBottomColor: 'black',
+    //marginBottom: 3,
+  },
+  listItemThumb: {
+    width: 80,
+    height: 80,
+  },
   container: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
     width: width,
     backgroundColor: '#F5FCFF',
   },

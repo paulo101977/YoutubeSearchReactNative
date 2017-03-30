@@ -17,11 +17,13 @@ import styles from '../styles/main';
 import ListView from './list';
 
 
-export default class Main extends Component {
+export default class YoutubeSearchHome extends Component {
   render(){
     return(
       <View style={styles.container}>
         <ListView></ListView>
+        {this.props.children}
+        {/* render the Pop-up and other stacked components*/}
       </View>
     )
   }
