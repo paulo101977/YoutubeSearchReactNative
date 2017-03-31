@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text} from 'react-native';
+import { Modal , View, Text} from 'react-native';
 
 import {Spinner, Container, Content} from 'native-base';
 
@@ -7,7 +7,7 @@ import {Spinner, Container, Content} from 'native-base';
 import styles from '../styles/main';
 
 
-import Modal from 'react-native-modalbox';
+//import Modal from 'react-native-modalbox';
 
 
 export default class LoadingScreen extends Component {
@@ -16,6 +16,9 @@ export default class LoadingScreen extends Component {
     super(props);
 
     console.log('constructor')
+    this.state = {
+      visible: false
+    }
 
     this._openModal = this._openModal.bind(this);
     this._closeModal = this._closeModal.bind(this);
@@ -23,11 +26,13 @@ export default class LoadingScreen extends Component {
 
   _openModal(){
     console.log('open')
-    this.refs.modal.open();
+    //this.refs.modal.open();
+    this.setState({'visible': true});
   }
 
   _closeModal(){
-    this.refs.modal.close();
+    //this.refs.modal.close();
+    this.setState({'visible':false});
   }
 
   componentDidMount() {
@@ -35,15 +40,21 @@ export default class LoadingScreen extends Component {
   }
 
   render() {
-    return (
 
+    const _self = this;
+
+    return (
             <Modal
-            backdrop={true}
-            ref={'modal'}
-            isOpen={true}
-            style={[styles.container, {justifyContent: 'center',alignItems: 'center'}]}
-            swipeToClose={false} >
-              <View style={[styles.container , {flex:1,flexDirection: 'column', alignItems: 'center' , justifyContent: 'center'}]}>
+              animationType={"slide"}
+              transparent={true}
+              visible={_self.state.visible}>
+              {/*<Modal
+              backdrop={true}
+              ref={'modal'}
+              isOpen={true}
+              style={[styles.container, {justifyContent: 'center',alignItems: 'center'}]}
+              swipeToClose={false} >*/}
+              <View style={[styles.container , {backgroundColor: '#00000055',flex:1,flexDirection: 'column', alignItems: 'center' , justifyContent: 'center'}]}>
                 {/*<Content style={[styles.container , {flex:1}]}>*/}
 
                   <Text style={{fontSize: 30, color: 'black'}}>Test ...</Text>
