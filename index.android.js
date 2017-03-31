@@ -53,6 +53,9 @@ export default class App extends Component {
 
       //bind methods:
       this._setLoading = this._setLoading.bind(this);
+      this._renderMain = this._renderMain.bind(this);
+      this._openModal = this._openModal.bind(this);
+      this._closeModal = this._closeModal.bind(this);
   }
 
   getInitialState(){
@@ -61,8 +64,30 @@ export default class App extends Component {
     }
   }
 
+  _openModal(){
+    this.loadingscreen.refs.modal.open();
+  }
+
+  _closeModal(){
+    this.refs.modal.close();
+  }
+
   _setLoading(){
     this.setState({loading: !this.state.loading})
+  }
+
+  _renderMain(){
+    return(
+      <Container style={{flex:1}}>
+        <Container style={{flex:1}}>
+          <YoutubeSearchHome/>
+          <LoadingScreen ref="loadingscreen"/>
+          {/*<YoutubeSearchHome>
+
+          </YoutubeSearchHome>*/}
+        </Container>
+      </Container>
+    )
   }
 
   render() {
@@ -78,17 +103,7 @@ export default class App extends Component {
           initialRoute={routes[0]}
           initialRouteStack={routes}
           renderScene={(route, navigator) =>
-            <View style={{flex:1}}>
-              {
-                !this.state.loading ?
-                  <YoutubeSearchHome>
-                    <Tooltip text={"Fill the video name..."}></Tooltip>
-                  </YoutubeSearchHome>
-                  :
-                  <LoadingScreen/>
-              }
-
-            </View>
+            this._renderMain()
           }
           navigationBar={
              <Navigator.NavigationBar
@@ -102,14 +117,6 @@ export default class App extends Component {
                             underlineColorAndroid="white"
                             placeholder='Type your video...'
                             style={styles.searchInput}/>
-
-                            {/* Here we are make tests for the popup/tooltip */}
-                            {/*<View style={styles.tooltip}>
-                              <Text>
-                                Pop-up test
-                              </Text>
-                            </View>
-                            */}
                       </View>
                     )
                   },
@@ -120,7 +127,7 @@ export default class App extends Component {
                          underlayColor="blue"
                          activeOpacity={0.3}>
                            <Button
-                             onPress={this._setLoading}
+                             onPress={this._openModal}
                              style={styles.searchButton}
                              large
                              danger

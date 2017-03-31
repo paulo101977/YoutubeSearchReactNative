@@ -20,7 +20,7 @@ export default class LoadingScreen extends Component {
 
   componentDidMount() {
     console.log('open')
-    this.refs.modal.open();
+
   }
 
   render() {
@@ -29,7 +29,7 @@ export default class LoadingScreen extends Component {
             <Modal
             backdrop={true}
             ref={'modal'}
-            isOpen={true}
+            isOpen={false}
 
             style={[styles.container, {justifyContent: 'center',alignItems: 'center'}]}
             swipeToClose={false} >
