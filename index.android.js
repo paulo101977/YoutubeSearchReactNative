@@ -58,18 +58,12 @@ export default class App extends Component {
       this._closeModal = this._closeModal.bind(this);
   }
 
-  getInitialState(){
-    return {
-      loading: false
-    }
-  }
-
   _openModal(){
-    this.loadingscreen.refs.modal.open();
+    this.refs.navigator.refs.loadingscreen._openModal();
   }
 
   _closeModal(){
-    this.refs.modal.close();
+    this.refs.navigator.refs.loadingscreen._closeModal();
   }
 
   _setLoading(){
@@ -79,13 +73,8 @@ export default class App extends Component {
   _renderMain(){
     return(
       <Container style={{flex:1}}>
-        <Container style={{flex:1}}>
           <YoutubeSearchHome/>
-          <LoadingScreen ref="loadingscreen"/>
-          {/*<YoutubeSearchHome>
-
-          </YoutubeSearchHome>*/}
-        </Container>
+          <LoadingScreen ref={'loadingscreen'}/>
       </Container>
     )
   }
@@ -100,6 +89,7 @@ export default class App extends Component {
 
       return (
         <Navigator
+          ref={'navigator'}
           initialRoute={routes[0]}
           initialRouteStack={routes}
           renderScene={(route, navigator) =>

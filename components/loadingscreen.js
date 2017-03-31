@@ -16,10 +16,21 @@ export default class LoadingScreen extends Component {
     super(props);
 
     console.log('constructor')
+
+    this._openModal = this._openModal.bind(this);
+    this._closeModal = this._closeModal.bind(this);
+  }
+
+  _openModal(){
+    console.log('open')
+    this.refs.modal.open();
+  }
+
+  _closeModal(){
+    this.refs.modal.close();
   }
 
   componentDidMount() {
-    console.log('open')
 
   }
 
@@ -29,8 +40,7 @@ export default class LoadingScreen extends Component {
             <Modal
             backdrop={true}
             ref={'modal'}
-            isOpen={false}
-
+            isOpen={true}
             style={[styles.container, {justifyContent: 'center',alignItems: 'center'}]}
             swipeToClose={false} >
               <View style={[styles.container , {flex:1,flexDirection: 'column', alignItems: 'center' , justifyContent: 'center'}]}>
