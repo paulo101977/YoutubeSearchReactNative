@@ -45,7 +45,7 @@ export default class LoadingScreen extends Component {
 
     return (
             <Modal
-              animationType={"slide"}
+              animationType={"fade"}
               transparent={true}
               visible={_self.state.visible}>
               {/*<Modal
