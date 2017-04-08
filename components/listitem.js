@@ -25,7 +25,8 @@ export default class ListItemComponent extends Component {
   }
   render() {
 
-    const data = this.props.data;
+    const {full_name} = this.props.data;
+    const {avatar_url} = this.props.data.owner;
 
     return (
         <ListItem style={this.props.style}>
@@ -34,10 +35,10 @@ export default class ListItemComponent extends Component {
                 <Left>
                   <Image
                     style={styles.listItemThumb}
-                    source={sourceImg} />
+                    source={{uri: avatar_url}}  />
                 </Left>
                 <Body>
-                  <Text>{data}</Text>
+                  <Text>{full_name}</Text>
                 </Body>
               </CardItem>
               <CardItem>

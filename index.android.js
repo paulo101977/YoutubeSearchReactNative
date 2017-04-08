@@ -9,6 +9,7 @@ import {
   AppRegistry,
   StyleSheet,
   Text,
+  Alert,
   View,
   TextInput, //exclude this
   Navigator, /* Test for navigator, over the Navigation */
@@ -48,7 +49,8 @@ export default class App extends Component {
       super(props);
 
       this.state = {
-        loading: false
+        loading: false,
+        dataSource: []
       }
 
       //bind methods:
@@ -56,6 +58,80 @@ export default class App extends Component {
       this._renderMain = this._renderMain.bind(this);
       this._openModal = this._openModal.bind(this);
       this._closeModal = this._closeModal.bind(this);
+      this._renderRight  = this._renderRight.bind(this);
+      this._renderLeft = this._renderLeft.bind(this);
+      this._loadinData = this._loadinData.bind(this);
+  }
+    
+   _alert(){
+       Alert.alert(
+          'Alert Title',
+          'My Alert Msg',
+          [
+            {text: 'Ask me later', onPress: () => console.log('Ask me later pressed')},
+            {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+            {text: 'OK', onPress: () => console.log('OK Pressed')},
+          ],
+          { cancelable: false }
+        )
+   }
+    
+  _loadinData(){
+      
+    this._openModal();
+
+    fetch('https://api.github.com/search/repositories?q=tetris')
+    .then((response) => response.json())
+    .then((responseJson) => {
+    //return responseJson.movies;
+    //this._alert();
+      const { items } = responseJson;
+        
+      console.log(items)
+      
+      setInterval(() => {
+          this._closeModal();
+          this.setState({dataSource : items })
+      } , 400)
+
+    })
+    .catch((error) => {
+        console.error(error);
+        this._alert();
+    });
+  }
+    
+  _renderLeft(){
+      return (
+          <View style={styles.containerElementsSearch}>
+              <TextInput
+                placeholderTextColor='#FFFFFF88'
+                selectionColor="white"
+                underlineColorAndroid="white"
+                placeholder='Type your video...'
+                style={styles.searchInput}/>
+          </View>
+        )
+  }
+    
+  _renderRight(){
+      return (
+         <View style={styles.containerElementsButton}>
+           <TouchableHighlight
+             underlayColor="blue"
+             activeOpacity={0.3}>
+               <Button
+                 onPress={this._loadinData}
+                 style={styles.searchButton}
+                 large
+                 danger
+                 iconLeft>
+                 {/* Implemented with native-base */}
+                 <Icon name="search" size={20} color="white" />
+               </Button>
+           </TouchableHighlight>
+        </View>
+       );
   }
 
   _openModal(){
@@ -70,10 +146,10 @@ export default class App extends Component {
     this.setState({loading: !this.state.loading})
   }
 
-  _renderMain(){
+  _renderMain(data){
     return(
       <Container style={{flex:1}}>
-          <YoutubeSearchHome/>
+          <YoutubeSearchHome data={data} />
           <LoadingScreen ref={'loadingscreen'}/>
       </Container>
     )
@@ -86,48 +162,24 @@ export default class App extends Component {
       ];
 
       //set the navigation bar
-
+       const _self = this;
+      
       return (
+        
         <Navigator
           ref={'navigator'}
           initialRoute={routes[0]}
           initialRouteStack={routes}
           renderScene={(route, navigator) =>
-            this._renderMain()
+            _self._renderMain(this.state.dataSource)
           }
           navigationBar={
              <Navigator.NavigationBar
                routeMapper={{
                  LeftButton: (route, navigator, index, navState) =>
-                  { return (
-                      <View style={styles.containerElementsSearch}>
-                          <TextInput
-                            placeholderTextColor='#FFFFFF88'
-                            selectionColor="white"
-                            underlineColorAndroid="white"
-                            placeholder='Type your video...'
-                            style={styles.searchInput}/>
-                      </View>
-                    )
-                  },
+                  { return _self._renderLeft()},
                  RightButton: (route, navigator, index, navState) =>
-                   { return (
-                     <View style={styles.containerElementsButton}>
-                       <TouchableHighlight
-                         underlayColor="blue"
-                         activeOpacity={0.3}>
-                           <Button
-                             onPress={this._openModal}
-                             style={styles.searchButton}
-                             large
-                             danger
-                             iconLeft>
-                             {/* Implemented with native-base */}
-                             <Icon name="search" size={20} color="white" />
-                           </Button>
-                       </TouchableHighlight>
-                    </View>
-                   ); },
+                   { return _self._renderRight() },
                  Title: (route, navigator, index, navState) =>
                    { return null; },
                }}
