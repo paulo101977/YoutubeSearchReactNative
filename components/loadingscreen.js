@@ -54,7 +54,7 @@ export default class LoadingScreen extends Component {
               isOpen={true}
               style={[styles.container, {justifyContent: 'center',alignItems: 'center'}]}
               swipeToClose={false} >*/}
-              <View style={[styles.container , {backgroundColor: '#00000055',flex:1,flexDirection: 'column', alignItems: 'center' , justifyContent: 'center'}]}>
+              <View style={[styles.container , {backgroundColor: '#00000077',flex:1,flexDirection: 'column', alignItems: 'center' , justifyContent: 'center'}]}>
                 {/*<Content style={[styles.container , {flex:1}]}>*/}
 
                   <Text style={{fontSize: 30, color: 'black'}}>Test ...</Text>
