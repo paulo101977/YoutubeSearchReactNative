@@ -20,12 +20,19 @@ export default class ListViewComponent extends Component {
       ]
     };
 
-    this.getList = this.getList.bind(this);
+    this.renderItem = this.renderItem.bind(this);
   }
+    
 
-  getList() {
-    if(this.state.dataSource){
-      return this.state.dataSource.map(
+  renderItem() {
+      
+    const {data} = this.props;
+    const {dataSource} = this.state;
+      
+     const dataSet = (data) ? data : dataSource;
+      
+    if(dataSource){
+      return dataSet.map(
         (data, key) =>
           <ListItem
             style={styles.listItemContainer}
@@ -45,7 +52,7 @@ export default class ListViewComponent extends Component {
     return (
       <Container style={styles.listContainer}>
         <Content>
-          {this.getList()}
+          {this.renderItem()}
         </Content>
       </Container>
     );
