@@ -22,19 +22,20 @@ export default class ListViewComponent extends Component {
 
     this.renderItem = this.renderItem.bind(this);
   }
-    
+
 
   renderItem() {
-      
+
     const {data} = this.props;
     const {dataSource} = this.state;
-      
+
      const dataSet = (data) ? data : dataSource;
-      
+
     if(dataSource){
       return dataSet.map(
         (data, key) =>
           <ListItem
+            navigator={this.props.navigator}
             style={styles.listItemContainer}
             key={key}
             data={data}/>

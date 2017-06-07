@@ -1,8 +1,4 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
+
 
 import React, { Component } from 'react';
 import {
@@ -14,9 +10,10 @@ import {
   TextInput, //exclude this
   Navigator, /* Test for navigator, over the Navigation */
   TouchableHighlight, //add touch effect
+  Button,
+  Dimensions,
 } from 'react-native';
 
-import {Button,Container,Input} from 'native-base';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 
@@ -26,7 +23,7 @@ import {
 } from 'react-navigation';
 
 //import main component root
-import YoutubeSearchHome from './components/main';
+import YoutubeSearchComponent from './components/YoutubeSearchComponent';
 
 //the Tooltip
 import Tooltip from './components/tooltip';
@@ -36,7 +33,7 @@ import LoadingScreen from './components/loadingscreen';
 
 //var ToolTip = require('react-native-tooltip');
 
-import styles from './styles/main';
+//import styles from './styles/main';
 
 //other router component
 /* const App = StackNavigator({
@@ -62,7 +59,7 @@ export default class App extends Component {
       this._renderLeft = this._renderLeft.bind(this);
       this._loadinData = this._loadinData.bind(this);
   }
-    
+
    _alert(){
        Alert.alert(
           'Alert Title',
@@ -75,9 +72,9 @@ export default class App extends Component {
           { cancelable: false }
         )
    }
-    
+
   _loadinData(){
-      
+
     this._openModal();
 
     fetch('https://api.github.com/search/repositories?q=tetris')
@@ -86,9 +83,9 @@ export default class App extends Component {
     //return responseJson.movies;
     //this._alert();
       const { items } = responseJson;
-        
-      console.log(items)
-      
+
+      //console.log(items)
+
       setInterval(() => {
           this._closeModal();
           this.setState({dataSource : items })
@@ -100,7 +97,7 @@ export default class App extends Component {
         this._alert();
     });
   }
-    
+
   _renderLeft(){
       return (
           <View style={styles.containerElementsSearch}>
@@ -113,22 +110,18 @@ export default class App extends Component {
           </View>
         )
   }
-    
+
   _renderRight(){
       return (
          <View style={styles.containerElementsButton}>
            <TouchableHighlight
-             underlayColor="blue"
+             onPress={this._loadinData}
              activeOpacity={0.3}>
-               <Button
-                 onPress={this._loadinData}
-                 style={styles.searchButton}
-                 large
-                 danger
-                 iconLeft>
+               <View
+                 style={styles.searchButton}>
                  {/* Implemented with native-base */}
                  <Icon name="search" size={20} color="white" />
-               </Button>
+               </View>
            </TouchableHighlight>
         </View>
        );
@@ -146,45 +139,76 @@ export default class App extends Component {
     this.setState({loading: !this.state.loading})
   }
 
-  _renderMain(data){
+  _renderMain(data , navigator){
     return(
-      <Container style={{flex:1}}>
-          <YoutubeSearchHome data={data} />
+      <View style={{flex:1}}>
+          <YoutubeSearchComponent navigator={navigator} data={data} />
           <LoadingScreen ref={'loadingscreen'}/>
-      </Container>
+      </View>
     )
   }
 
   render() {
       const routes = [
-        {title: 'First Scene', index: 0},
-        {title: 'Second Scene', index: 1},
+        {title: 'Home', index: 0},
+        {title: 'Item', index: 1},
       ];
 
       //set the navigation bar
        const _self = this;
-      
+
+       //console.log('navigator')
+       //console.log(this.refs.navigator)
+
+       //const navigator = this.refs.navigator;
+
       return (
-        
+
         <Navigator
           ref={'navigator'}
           initialRoute={routes[0]}
           initialRouteStack={routes}
-          renderScene={(route, navigator) =>
-            _self._renderMain(this.state.dataSource)
+          renderScene={(route, navigator) =>{
+              if(route.index == 0)
+                return _self._renderMain(this.state.dataSource , navigator)
+              else {
+                return <View></View>
+              }
+            }
           }
           navigationBar={
              <Navigator.NavigationBar
                routeMapper={{
                  LeftButton: (route, navigator, index, navState) =>
-                  { return _self._renderLeft()},
+                  {
+                    if(route.index == 0)
+                        return _self._renderLeft()
+                    else{
+                        return <View style={styles.backButton}>
+                                  <Icon
+                                    onPress={()=>{navigator.pop()}}
+                                    name="chevron-left" size={20} color="white" />
+                                </View>
+                    }
+                  },
                  RightButton: (route, navigator, index, navState) =>
-                   { return _self._renderRight() },
+                   {
+                     if(route.index == 0) return _self._renderRight()
+                     else return null;
+                   },
                  Title: (route, navigator, index, navState) =>
-                   { return null; },
+                   {
+                      if(route.index == 0)
+                          return null;
+                      else{
+                        return
+                          <Text>
+                            {route.title}
+                          </Text>
+                    }
+                   },
                }}
-               style={styles.searchContainer}
-             />
+               style={styles.searchContainer}/>
           }
           style={{padding: 1}}
         />
@@ -194,3 +218,121 @@ export default class App extends Component {
 
 //register the main componet
 AppRegistry.registerComponent('YoutubeSearch', () => App);
+
+//get the Dimensions
+var width = Dimensions.get('window').width; //full width
+var height = Dimensions.get('window').height; //full height;
+
+const styles = StyleSheet.create({
+  input: {
+    width: width,
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1
+  },
+  tooltip: {
+    height: 30,
+    flex: 1,
+    marginVertical: 2,
+    marginHorizontal: 2,
+    borderLeftWidth: 3,
+    borderTopWidth: 0,
+    borderRightWidth: 0,
+    borderBottomWidth: 0,
+    borderRadius: 5,
+    borderLeftColor: '#c7c7cc',
+    padding: 2,
+    fontSize: 14,
+    backgroundColor: 'white',
+    position: "absolute",
+    top: 60,
+    left: 20
+  },
+  searchContainer: {
+    flex: 1,
+    alignItems: 'flex-end',
+    justifyContent: 'flex-end',
+    backgroundColor: 'red'
+  },
+  containerElementsSearch: {
+    flex: 4,
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+    backgroundColor: 'red',
+  },
+  containerElementsButton: {
+    flex: 1,
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+    backgroundColor: 'red'
+  },
+  searchInput :{
+    width: width - 60,
+    height: 40,
+    borderWidth: 0,
+    color: 'white',
+    fontFamily: 'Times',
+    fontSize: 20,
+    fontWeight: 'bold'
+  },
+  searchButton: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'red',
+    borderRadius: 6,
+    padding: 0,
+    paddingLeft: 6,
+    paddingRight: 6,
+  },
+  backButton: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'red',
+    borderRadius: 6,
+    padding: 0,
+    paddingLeft: 6,
+    paddingRight: 6,
+    width: 40,
+    height: 40,
+  },
+  title:{
+
+  },
+  searchButtonText: {
+    fontSize: 20,
+    color: 'white',
+    fontFamily: 'Times',
+  },
+  listContainer:{
+    marginTop: 60,
+    //height: height - 60, //max height of screen minus 60
+  },
+  listItemContainer:{
+    height: 100,
+    //borderBottomWidth: 1,
+    //borderBottomColor: 'black',
+    //marginBottom: 3,
+  },
+  listItemThumb: {
+    width: 80,
+    height: 80,
+  },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    width: width,
+    backgroundColor: '#F5FCFF',
+  },
+  welcome: {
+    fontSize: 20,
+    textAlign: 'center',
+    margin: 10,
+  },
+  instructions: {
+    textAlign: 'center',
+    color: '#333333',
+    marginBottom: 5,
+  },
+})

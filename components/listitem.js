@@ -3,78 +3,112 @@
 
 
 import React, { Component } from 'react';
-import { 
-    AppRegistry, 
-    ListView, 
-    View, 
+import {
+    AppRegistry,
+    ListView,
+    View,
     Animated, //start animation from here
     Image,
     Easing,
+    Text,
+    StyleSheet,
+    TouchableOpacity
 } from 'react-native';
 
-import {
-  Text,
-  Card,
-  CardItem,
-  Container,
-  Content,
-  Right,
-  Left,
-  Body,
-  ListItem,
-} from 'native-base';
 
-import styles from '../styles/main';
+
+//import styles from '../styles/main';
 
 import sourceImg from '../images/google_icon.png';
 
 export default class ListItemComponent extends Component {
-    
+
   // Initialize the hardcoded data
   constructor(props) {
     super(props);
-      
+
     this.state = {
       fadeAnim: new Animated.Value(0),
     };
 
+    this._handleClick = this._handleClick.bind(this);
+
   }
 
   componentDidMount() {
-    Animated.timing(                            
-      this.state.fadeAnim,                 
+    Animated.timing(
+      this.state.fadeAnim,
       {
-        toValue: 1,  
+        toValue: 1,
         duration: 2000,
       }
-    ).start();               
+    ).start();
+  }
+
+  _handleClick(data){
+    const {full_name , description} = data;
+
+    this.props.navigator.push({
+      title: full_name,
+      index: 1,
+      data: data,
+    });
   }
 
   render() {
 
-    const {full_name} = this.props.data;
-    const {avatar_url} = this.props.data.owner;
+    const {data} = this.props;
+    const {full_name , description} = data;
+    const {avatar_url} = data.owner;
 
     return (
-        <Animated.View style={this.props.style , {height: 100 , opacity:this.state.fadeAnim }}>
-           <ListItem style={this.props.style}>
-                <Card>
-                  <CardItem cardBody>
-                    <Left>
-                      <Image
-                        style={styles.listItemThumb}
-                        source={{uri: avatar_url}}  />
-                    </Left>
-                    <Body>
-                      <Text>{full_name}</Text>
-                    </Body>
-                  </CardItem>
-                  <CardItem>
+        <Animated.View style={{opacity:this.state.fadeAnim }}>
+          <TouchableOpacity onPress={()=>{this._handleClick(data)}} activeOpacity={0.2}>
+            <View style={styles.container}>
+              <Image
+                style={styles.image}
+                source={{uri: avatar_url}}  />
+              <View style={styles.textContainer}>
+                <Text style={styles.title}>{full_name}</Text>
+                <Text style={styles.description}>{description}</Text>
+              </View>
 
-                  </CardItem>
-                </Card>
-            </ListItem>
+            </View>
+          </TouchableOpacity>
         </Animated.View>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: 'row',
+    borderRadius: 4,
+    borderColor: '#DDDDDD',
+    borderWidth: 1,
+    margin: 4,
+    maxHeight: 120,
+  },
+  image: {
+    width: 100,
+    height: 100,
+  },
+  textContainer: {
+    padding: 10,
+    flex: 1,
+    flexWrap: "wrap"
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: "900",
+    marginBottom: 10,
+    color: "black",
+    flex: 1,
+    flexWrap: "wrap",
+  },
+  description: {
+    flex: 1,
+    flexWrap: "wrap",
+  }
+})

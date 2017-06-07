@@ -21,7 +21,9 @@ export default class YoutubeSearchHome extends Component {
   render(){
     return(
       <View style={styles.container}>
-        <ListView data={this.props.data}></ListView>
+        <ListView
+          navigator={this.props.navigator}
+          data={this.props.data}></ListView>
         {this.props.children}
         {/* render the Pop-up and other stacked components*/}
       </View>
