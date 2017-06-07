@@ -15,7 +15,7 @@ export default class LoadingScreen extends Component {
   constructor(props){
     super(props);
 
-    console.log('constructor')
+    //console.log('constructor')
     this.state = {
       visible: false
     }
@@ -25,13 +25,10 @@ export default class LoadingScreen extends Component {
   }
 
   _openModal(){
-    console.log('open')
-    //this.refs.modal.open();
     this.setState({'visible': true});
   }
 
   _closeModal(){
-    //this.refs.modal.close();
     this.setState({'visible':false});
   }
 

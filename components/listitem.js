@@ -15,7 +15,9 @@ import {
     TouchableOpacity
 } from 'react-native';
 
+import {Actions} from 'react-native-router-flux';
 
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 //import styles from '../styles/main';
 
@@ -40,19 +42,15 @@ export default class ListItemComponent extends Component {
       this.state.fadeAnim,
       {
         toValue: 1,
-        duration: 2000,
+        duration: 1000,
       }
     ).start();
   }
 
   _handleClick(data){
-    const {full_name , description} = data;
+    const {full_name , description, owner} = data;
 
-    this.props.navigator.push({
-      title: full_name,
-      index: 1,
-      data: data,
-    });
+    Actions.item({data:data , title: full_name})
   }
 
   render() {
@@ -62,20 +60,25 @@ export default class ListItemComponent extends Component {
     const {avatar_url} = data.owner;
 
     return (
-        <Animated.View style={{opacity:this.state.fadeAnim }}>
-          <TouchableOpacity onPress={()=>{this._handleClick(data)}} activeOpacity={0.2}>
-            <View style={styles.container}>
-              <Image
-                style={styles.image}
-                source={{uri: avatar_url}}  />
-              <View style={styles.textContainer}>
-                <Text style={styles.title}>{full_name}</Text>
-                <Text style={styles.description}>{description}</Text>
-              </View>
+        <View>
+          {/* TODO: create generic component here (topbar)*/}
+          <Animated.View style={{opacity:this.state.fadeAnim }}>
+            <TouchableOpacity
+              onPress={()=>{this._handleClick(data)}}
+              activeOpacity={0.2}>
+              <View style={styles.container}>
+                <Image
+                  style={styles.image}
+                  source={{uri: avatar_url}}  />
+                <View style={styles.textContainer}>
+                  <Text style={styles.title}>{full_name}</Text>
+                  <Text style={styles.description}>{description}</Text>
+                </View>
 
-            </View>
-          </TouchableOpacity>
-        </Animated.View>
+              </View>
+            </TouchableOpacity>
+          </Animated.View>
+        </View>
     );
   }
 }
