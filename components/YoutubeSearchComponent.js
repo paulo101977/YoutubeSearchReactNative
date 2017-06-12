@@ -1,7 +1,5 @@
 /**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
+ * 
  */
 
 import React, { Component } from 'react';
@@ -15,10 +13,12 @@ import {
   Button,
   TouchableOpacity,
   Dimensions,
+  Alert,
 } from 'react-native';
 
 import LoadingScreen from './loadingscreen';
 import ListItem from './listitem';
+import Tooltip from './tooltip';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 
@@ -59,13 +59,11 @@ export default class YoutubeSearchHome extends Component {
     .then((responseJson) => {
       const { items } = responseJson;
 
-      console.log(items)
+      //console.log(items)
 
-      setInterval(() => {
+      setTimeout(() => {
           this._closeModal();
           this.setState({dataSource: ds.cloneWithRows(items)})
-
-
       } , 400)
 
     })
@@ -83,6 +81,25 @@ export default class YoutubeSearchHome extends Component {
     this.refs.modal._closeModal();
   }
 
+  _showTooltip(){
+    if(!this.state.searchText){
+      this.setState({showTooltip:true})
+    }
+  }
+
+  _hideTooltip(){
+    this.setState({showTooltip:false})
+  }
+
+  _changeText(searchText){
+    if(!searchText){
+      this.setState({showTooltip:true , searchText: searchText})
+    }
+    else{
+      this.setState({showTooltip:false , searchText: searchText})
+    }
+  }
+
   render(){
 
     const {dataSource} = this.state;
@@ -92,8 +109,10 @@ export default class YoutubeSearchHome extends Component {
         <View style={styles.searchBar}>
           <View>
             <TextInput
-              onChangeText={(text)=>{ this.setState({searchText: text})}}
+              onChangeText={(text)=>{ this._changeText(text)}}
               ref={"textInput"}
+              onFocus={()=>this._showTooltip()}
+              onBlur={()=>this._hideTooltip()}
               placeholderTextColor='#FFFFFF88'
               selectionColor="white"
               underlineColorAndroid="white"
@@ -111,6 +130,12 @@ export default class YoutubeSearchHome extends Component {
           dataSource={this.state.dataSource}
           renderRow={(rowData) => <ListItem data={rowData} /> } />
         <LoadingScreen ref="modal"/>
+
+        {this.state.showTooltip?
+          <Tooltip info="Type anything!" style={styles.tooltip}/>
+          :
+          null
+        }
       </View>
     )
   }
@@ -163,4 +188,8 @@ const styles = StyleSheet.create({
     flex: 1,
     flexWrap: "wrap",
   },
+  tooltip: {
+    position: "absolute",
+    left: 10
+  }
 })
